@@ -1,16 +1,16 @@
 
-var config = require("../appConfig");
-var fetchModule = require("fetch");
+const config = require("../appConfig");
+const fetchModule = require("fetch");
 
 const login = function (user) {
     return fetchModule.fetch(config.apiUrl + "user/" + config.appKey + "/login", {
         method: "POST",
         body: JSON.stringify({
-                username: user.email,
-                password: user.password
-            }),
-            headers: getCommonHeaders()
-        })
+            username: user.email,
+            password: user.password
+        }),
+        headers: getCommonHeaders()
+    })
         .then(handleErrors)
         .then(function (response) {
             return response.json();

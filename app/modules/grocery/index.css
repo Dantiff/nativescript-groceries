@@ -1,0 +1,61 @@
+/* Add Groceries */
+.add-bar {
+  background-color: darkslategray;
+  padding: 5;
+}
+.add-bar Image {
+  height: 25;
+  vertical-align: center;
+  margin-left: 10;
+  margin-right: 10;
+}
+.add-bar TextField {
+  padding: 10;
+}
+
+/* Groceries List */
+.groceries-list-view {
+  background-color: transparent;
+  opacity: 0;
+  padding-top: 10;
+  padding-bottom: 10;
+}
+.visible {
+  animation-name: show;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+@keyframes show {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.container {
+  background-color: white;
+  margin-top: 1;
+}
+.tap-target {
+  padding-top: 13;
+  padding-bottom: 13;
+  padding-left: 16;
+}
+.tap-target Label {
+  min-width: 200;
+}
+.check-box {
+  margin-right: 10;
+  height: 20;
+}
+.delete-container {
+  padding: 10 15;
+  vertical-align: middle;
+}
+.delete-container StackLayout {
+  padding: 5;
+}
+.delete-container Image {
+  height: 20;
+}
+
+.add-bar-recent-toggle {
+  text-transform: uppercase;
+}

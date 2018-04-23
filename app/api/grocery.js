@@ -1,63 +1,47 @@
-var config = require("../appConfig");
-var fetchModule = require("fetch");
-var ObservableArray = require("data/observable-array").ObservableArray;
+const config = require("../appConfig");
+const fetchModule = require("fetch");
 
-function GroceryListViewModel(items) {
-    var baseUrl = config.apiUrl + "appdata/" + config.appKey + "/Groceries";
-    var viewModel = new ObservableArray(items);
+const baseUrl = config.apiUrl + "appdata/" + config.appKey + "/Groceries";
 
-    viewModel.load = function () {
-        return fetch(baseUrl, {
-            headers: getCommonHeaders()
+const load = function () {
+    return fetch(baseUrl, {
+        headers: getCommonHeaders()
+    })
+        .then(handleErrors)
+        .then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            return data;
+        });
+};
+
+ const add = function (grocery) {
+    return fetch(baseUrl, {
+        method: "POST",
+        body: JSON.stringify({
+            Name: grocery
+        }),
+        headers: getCommonHeaders()
+    })
+        .then(handleErrors)
+        .then(function (response) {
+            return response.json();
         })
-            .then(handleErrors)
-            .then(function (response) {
-                return response.json();
-            }).then(function (data) {
-                data.forEach(function (grocery) {
-                    viewModel.push({
-                        name: grocery.Name,
-                        id: grocery._id
-                    });
-                });
-            });
-    };
+        .then(function (data) {
+            return data;
+        });
+};
 
-    viewModel.empty = function () {
-        while (viewModel.length) {
-            viewModel.pop();
-        }
-    };
-
-    viewModel.add = function (grocery) {
-        return fetch(baseUrl, {
-            method: "POST",
-            body: JSON.stringify({
-                Name: grocery
-            }),
-            headers: getCommonHeaders()
-        })
-            .then(handleErrors)
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                viewModel.push({ name: grocery, id: data._id });
-            });
-    };
-
-    viewModel.delete = function (index) {
-        return fetch(baseUrl + "/" + viewModel.getItem(index).id, {
-            method: "DELETE",
-            headers: getCommonHeaders()
-        })
-            .then(handleErrors)
-            .then(function () {
-                viewModel.splice(index, 1);
-            });
-    };
-    return viewModel;
-}
+const remove = function (id) {
+    return fetch(baseUrl + "/" + id, {
+        method: "DELETE",
+        headers: getCommonHeaders()
+    })
+        .then(handleErrors)
+        .then(function (data) {
+            return data;
+        });
+};
 
 function getCommonHeaders() {
     return {
@@ -74,4 +58,8 @@ function handleErrors(response) {
     return response;
 }
 
-module.exports = GroceryListViewModel;
+module.exports = {
+    load: load,
+    add, add,
+    remove: remove,
+};
