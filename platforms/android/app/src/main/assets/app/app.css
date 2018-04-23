@@ -1,7 +1,8 @@
 @import "nativescript-theme-core/css/core.light.css";
 
 /* Import css from other modules */
-@import "./modules/login/index.css";
+@import "./modules/user/index.css";
+@import "./modules/grocery/index.css";
 
 ActionBar {
   background-color: grey;
@@ -14,11 +15,16 @@ ActionBar {
 .test {
     color: green;
 }
+.page-base {
+  background-image: url("~/images/backpic.png");
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+}
 FlexboxLayout {
   justify-content: center;
   align-items: center;
   background-size: cover;
-  background-image: url("~/images/backpic.png");
 }
 StackLayout {
   width: 300;
@@ -40,4 +46,19 @@ Button, TextField {
 TextField {
   placeholder-color: #C4AFB4;
   color: black;
+}
+
+/* Forms */
+.form-errors {
+    color: red;
+    font-size: 14px;
+    line-height: 1;
+    padding: 2px 0;
+    background-color: transparent;
+    border-color: transparent !important;
+}
+
+/* Loaders */
+.app-loader {
+    position: absolute;
 }
