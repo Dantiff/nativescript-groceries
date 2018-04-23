@@ -2,6 +2,7 @@
 .add-bar {
   background-color: darkslategray;
   padding: 5;
+  margin-bottom: 10;
 }
 .add-bar Image {
   height: 25;
@@ -17,8 +18,6 @@
 .groceries-list-view {
   background-color: transparent;
   opacity: 0;
-  padding-top: 10;
-  padding-bottom: 10;
 }
 .visible {
   animation-name: show;
@@ -34,12 +33,15 @@
   margin-top: 1;
 }
 .tap-target {
-  padding-top: 13;
-  padding-bottom: 13;
+  padding-top: 15;
+  padding-bottom: 0;
   padding-left: 16;
 }
 .tap-target Label {
   min-width: 200;
+  font-weight: 600;
+  color: black;
+  font-size: 16px;
 }
 .check-box {
   margin-right: 10;
@@ -50,10 +52,12 @@
   vertical-align: middle;
 }
 .delete-container StackLayout {
-  padding: 5;
+  padding: 5 5 0 5;
 }
 .delete-container Image {
   height: 20;
+  margin-top: 10;
+
 }
 
 .add-bar-recent-toggle {

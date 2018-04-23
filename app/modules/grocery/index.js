@@ -1,7 +1,8 @@
 const dialogsModule = require("ui/dialogs");
 const dialogs = require('tns-core-modules/ui/dialogs');
 
-const GroceryApi = require("../../api/grocery");
+const GroceryApi = require("~/api/grocery");
+const Stores = require("~/modules/store");
 
 const Grocery = {
     data() {
@@ -62,29 +63,6 @@ const Grocery = {
             // Empty the input field
             that.grocery = '';
         },
-        onSwipeCellStarted(args) {
-            const swipeLimits = args.data.swipeLimits;
-            const swipeView = args.object;
-            const rightItem = swipeView.getViewById('delete-view');
-            swipeLimits.right = rightItem.getMeasuredWidth();
-            swipeLimits.left = 0;
-            swipeLimits.threshold = rightItem.getMeasuredWidth() / 2;
-        },
-        remove(item) {
-            const that = this;
-            dialogs.confirm('Are you sure you want to remove ' + item.name + '?')
-                .then(confirm => {
-                    if (confirm) {
-                        GroceryApi.remove(item.id)
-                            .then(function (data) {
-                                const index = that.groceryList.indexOf(item);
-                                that.groceryList.splice(index, 1);
-                            });
-                    } else {
-                        that.toggleDone(item);
-                    }
-                })
-        },
         toggleDone(item) {
             this.groceryList.forEach(function (g) {
                 if (g.id === item.id) {
@@ -94,11 +72,12 @@ const Grocery = {
         },
         changePage() {
             console.log("Navigating");
+            this.$navigateTo(Stores);
         }
     },
     template: `
         <Page xmlns:lv="nativescript-ui-listview">
-            <ActionBar :title="isNew ? 'New List' : 'Edit Grocery List'" color="black" automationText="ActionBar">
+            <ActionBar :title="groceryList.length ? 'Edit Grocery List' : 'New Grocery List'" color="white" backgroundColor="black" automationText="ActionBar">
                 <ActionItem @tap="changePage"><Button text="DONE"/></ActionItem>
             </ActionBar>
             <GridLayout rows="auto, *">
@@ -123,7 +102,7 @@ const Grocery = {
                                 class="tap-target"
                                 @tap="toggleDone(item)">
                                     <Image src="~/images/checkbox.png" class="check-box"></Image>
-                                    <Label :text="item.name" :class="item.done && !item.deleted ? 'line-through' : ''"></Label>
+                                    <Label :text="item.name| capitalizeWord" :class="item.done && !item.deleted ? 'line-through' : ''"></Label>
                                 </StackLayout>
                                 <GridLayout
                                     col="1"

@@ -1,9 +1,9 @@
 const dialogsModule = require("ui/dialogs");
 const frameModule = require("ui/frame");
-const LoadingIndicator = require("../../nativescript-loading-indicator").LoadingIndicator;
+const LoadingIndicator = require("~/nativescript-loading-indicator").LoadingIndicator;
 
-const UserApi = require("../../api/user");
-const Grocery = require("../grocery");
+const UserApi = require("~/api/user");
+const Grocery = require("~/modules/grocery");
 const appLoader = new LoadingIndicator();
 const appLoaderOptions = {
     message: 'Loading...',
