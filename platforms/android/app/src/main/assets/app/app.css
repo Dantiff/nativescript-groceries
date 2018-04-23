@@ -1,8 +1,9 @@
 @import "nativescript-theme-core/css/core.light.css";
 
 /* Import css from other modules */
-@import "./modules/user/index.css";
-@import "./modules/grocery/index.css";
+@import "~/modules/user/index.css";
+@import "~/modules/grocery/index.css";
+@import "~/modules/store/index.css";
 
 ActionBar {
   background-color: grey;
