@@ -70,6 +70,14 @@ const Grocery = {
                 }
             });
         },
+        remove(item) {
+            const that = this;
+            GroceryApi.remove(item.id)
+                .then(function (data) {
+                    const index = that.groceryList.indexOf(item);
+                    that.groceryList.splice(index, 1);
+                })
+        },
         changePage() {
             console.log("Navigating");
             this.$navigateTo(Stores);

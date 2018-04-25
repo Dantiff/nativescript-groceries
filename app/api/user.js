@@ -1,6 +1,5 @@
-
-const config = require("../appConfig");
 const fetchModule = require("fetch");
+const config = require("~/appConfig");
 
 const login = function (user) {
     return fetchModule.fetch(config.apiUrl + "user/" + config.appKey + "/login", {

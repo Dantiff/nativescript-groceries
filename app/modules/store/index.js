@@ -1,10 +1,36 @@
 const dialogsModule = require("ui/dialogs");
 const dialogs = require('tns-core-modules/ui/dialogs');
 const geolocation = require("~/nativescript-geolocation");
+const SocialShare = require("~/nativescript-social-share");
+const LoadingIndicator = require("~/nativescript-loading-indicator").LoadingIndicator;
 
 const Stores = require("~/modules/store");
-const Groceries = require("~/modules/grocery");
 let selectedStore = {};
+const appLoader = new LoadingIndicator();
+const appLoaderOptions = {
+    message: 'Processing...',
+    progress: 0.65,
+    android: {
+        indeterminate: true,
+        cancelable: true,
+        cancelListener: function (dialog) { console.log("Loading cancelled") },
+        max: 100,
+        progressNumberFormat: "%1d/%2d",
+        progressPercentFormat: 0.53,
+        progressStyle: 1,
+        secondaryProgress: 1
+    },
+    ios: {
+        details: "Additional detail note!",
+        margin: 10,
+        dimBackground: true,
+        color: "#4B9ED6", // color of indicator and labels
+        // background box around indicator
+        // hideBezel will override this if true
+        backgroundColor: "yellow",
+        hideBezel: true, // default false, can hide the surrounding bezel
+    },
+};
 
 const Store = {
     data() {
@@ -17,11 +43,11 @@ const Store = {
                     "photo": "paleo9",
                     "owner": "Carly Dominguez",
                     "gender": "female",
-                    "company": "Orbixtar Anivet",
+                    "company": "GYG Groceries",
                     "email": "carlydominguez@anivet.com",
                     "phone": "+1 (807) 488-3485",
-                    "address": "424 Exeter Street, Yogaville, Maryland, 7327",
-                    "about": "Velit exercitation ipsum non anim ut irure. Dolor esse voluptate cupidatat Lorem do duis tempor aute. Est consectetur nulla quis eu ea et exercitation ut velit exercitation do. Occaecat proident dolore cillum mollit sit eu. Consequat consequat nostrud quis quis tempor cillum velit sit non consectetur dolore.\r\n",
+                    "address": "424 Exeter Street, Ruaka, Kenya",
+                    "about": "We offer fresh hygenic and apealing groceries, we also package for collection after an order and deliver where needed.\r\n",
                     "registered": "2014-11-05T10:52:25 -03:00",
                     "latitude": 2.558502,
                     "longitude": -62.444368
@@ -33,11 +59,11 @@ const Store = {
                     "photo": "paleo2",
                     "owner": "Ronda Joyner",
                     "gender": "female",
-                    "company": "Datacator Sarasonic",
+                    "company": "Thika Tex",
                     "email": "rondajoyner@sarasonic.com",
                     "phone": "+1 (909) 593-2835",
-                    "address": "650 Halsey Street, Sharon, Guam, 6262",
-                    "about": "Culpa mollit voluptate cupidatat esse minim deserunt duis cillum tempor cillum labore id. Qui sint laborum tempor ex exercitation et officia non. Elit sint nisi do labore. Deserunt officia commodo elit amet sunt anim tempor voluptate sunt officia. Veniam veniam nostrud voluptate ex aute fugiat reprehenderit officia nulla irure.\r\n",
+                    "address": "650 Halsey Street, Thika, Kenya",
+                    "about": "Bacon ipsum dolor amet sirloin flank chicken buffalo, short ribs t-bone pastrami pork loin meatloaf porchetta tongue ham kielbasa. Brisket kevin bresaola alcatra, sausage strip steak leberkas andouille drumstick rump turducken landjaeger sirloin meatloaf chuck.\r\n",
                     "registered": "2014-10-17T06:35:43 -03:00",
                     "latitude": -61.078909,
                     "longitude": 40.991561
@@ -49,46 +75,14 @@ const Store = {
                     "photo": "paleo5",
                     "owner": "Earnestine Morse",
                     "gender": "female",
-                    "company": "Cedward Ultrasure",
+                    "company": "Nakumatt Galleria",
                     "email": "earnestinemorse@ultrasure.com",
                     "phone": "+1 (847) 576-2929",
-                    "address": "855 Nevins Street, Dowling, Kentucky, 2834",
-                    "about": "Sint incididunt irure ipsum eu mollit anim aliquip dolore voluptate est non enim. Aliquip duis quis consequat nostrud mollit fugiat amet mollit. Ea officia commodo dolor ipsum sint sint laboris cillum irure. Cupidatat deserunt est nulla laboris. Reprehenderit amet ad officia duis officia adipisicing eu laborum proident mollit consectetur. Dolor in consectetur dolore occaecat aliquip enim proident fugiat dolor.\r\n",
+                    "address": "855 Nevins Street, Galleria, Kenya",
+                    "about": "Prosciutto short ribs swine, meatball hamburger tongue burgdoggen strip steak alcatra. Tri-tip shank capicola bresaola biltong, frankfurter venison turkey hamburger doner prosciutto ground round ball tip porchetta. Tri-tip landjaeger sausage pancetta. Corned beef biltong pork belly leberkas shank jerky kielbasa, sausage shankle.\r\n",
                     "registered": "2016-05-30T09:33:35 -03:00",
                     "latitude": 20.64026,
                     "longitude": -84.966638
-                },
-                {
-                    "_id": "5ade0f09344e042960b18ff1",
-                    "guid": "8429fd95-4940-4740-9340-0f393f1400b9",
-                    "isOpen": true,
-                    "photo": "paleo1",
-                    "owner": "Toni Hunter",
-                    "gender": "female",
-                    "company": "Comtract Pharmex",
-                    "email": "tonihunter@pharmex.com",
-                    "phone": "+1 (868) 428-2135",
-                    "address": "624 Stillwell Avenue, Englevale, Wisconsin, 1637",
-                    "about": "Do proident ea cupidatat velit et non dolore ea sint. Ullamco eiusmod labore esse laborum velit. Consequat cupidatat commodo in ipsum Lorem. Voluptate enim amet pariatur officia nisi cupidatat labore ipsum amet qui aliqua cillum Lorem. Ut ex id Lorem reprehenderit elit nostrud dolore aliqua eiusmod esse anim ex elit. Officia quis Lorem qui ullamco qui duis ullamco et officia tempor.\r\n",
-                    "registered": "2016-03-06T02:36:07 -03:00",
-                    "latitude": 32.674028,
-                    "longitude": 79.286219
-                },
-                {
-                    "_id": "5ade0f09e84ab8a908063935",
-                    "guid": "4626202e-cb62-4b6f-bddc-9588b562ea10",
-                    "isOpen": true,
-                    "photo": "paleo7",
-                    "owner": "Sheila Galloway",
-                    "gender": "female",
-                    "company": "Assistia Maroptic",
-                    "email": "sheilagalloway@maroptic.com",
-                    "phone": "+1 (882) 457-3103",
-                    "address": "629 Dearborn Court, Kempton, Wyoming, 5391",
-                    "about": "Adipisicing ea esse et ex nulla proident cupidatat dolor quis et do. Aliquip eu pariatur nisi consectetur ut ullamco est est culpa Lorem. Qui commodo exercitation minim duis ullamco commodo dolor ad velit occaecat.\r\n",
-                    "registered": "2017-02-19T11:57:29 -03:00",
-                    "latitude": 81.029611,
-                    "longitude": -73.234003
                 },
                 {
                     "_id": "5ade0f09ffae14ad035fc41a",
@@ -101,7 +95,55 @@ const Store = {
                     "email": "maikline@rameon.com",
                     "phone": "+1 (821) 525-2778",
                     "address": "108 Verona Street, Elliott, Pennsylvania, 425",
-                    "about": "Veniam ex et esse officia ad sit esse. Reprehenderit enim adipisicing quis mollit aliqua cillum ex excepteur minim reprehenderit reprehenderit consectetur ad. Cillum minim ullamco laborum aute magna elit sit et magna deserunt. Eu magna consectetur labore in anim. Nulla velit amet ad occaecat veniam eiusmod Lorem in tempor deserunt sunt. Officia amet consequat ullamco fugiat sit.\r\n",
+                    "about": "Beef ribs alcatra cupim pig, brisket frankfurter rump fatback pastrami ribeye sausage landjaeger drumstick spare ribs sirloin. Bacon tail boudin swine filet mignon bresaola short loin beef ribs ground round pig andouille pork loin kielbasa cow. Beef pastrami tail bacon porchetta short ribs flank, tenderloin pork loin ball tip jerky biltong doner turducken spare ribs. Strip steak ground round tail short loin ham hock.\r\n",
+                    "registered": "2015-02-04T12:23:04 -03:00",
+                    "latitude": -40.303177,
+                    "longitude": -131.742657
+                },
+                {
+                    "_id": "5ade0f09344e042960b18ff1",
+                    "guid": "8429fd95-4940-4740-9340-0f393f1400b9",
+                    "isOpen": true,
+                    "photo": "paleo1",
+                    "owner": "Toni Hunter",
+                    "gender": "female",
+                    "company": "Rom Store",
+                    "email": "tonihunter@pharmex.com",
+                    "phone": "+1 (868) 428-2135",
+                    "address": "624 Stillwell Avenue, Karasani, Kenya",
+                    "about": "We offer fresh hygenic and apealing groceries, we also package for collection after an order and deliver where needed.\r\n",
+                    "registered": "2016-03-06T02:36:07 -03:00",
+                    "latitude": 32.674028,
+                    "longitude": 79.286219
+                },
+                {
+                    "_id": "5ade0f09e84ab8a908063935",
+                    "guid": "4626202e-cb62-4b6f-bddc-9588b562ea10",
+                    "isOpen": true,
+                    "photo": "paleo7",
+                    "owner": "Sheila Galloway",
+                    "gender": "female",
+                    "company": "Assistia Groceries",
+                    "email": "sheilagalloway@maroptic.com",
+                    "phone": "+1 (882) 457-3103",
+                    "address": "629 Dearborn Court, Kitengela",
+                    "about": "Adipisicing ea esse et ex nulla proident cupidatat dolor quis et do. Aliquip eu pariatur nisi consectetur ut ullamco est est culpa Lorem. Qui commodo exercitation minim duis ullamco commodo dolor ad velit occaecat.\r\n",
+                    "registered": "2017-02-19T11:57:29 -03:00",
+                    "latitude": 81.029611,
+                    "longitude": -73.234003
+                },
+                {
+                    "_id": "5ade0f09ffae14ad035fc41a",
+                    "guid": "21113066-0fcc-4bb1-9319-b0408db23c06",
+                    "isOpen": true,
+                    "photo": "paleo3",
+                    "owner": "Mai Kline",
+                    "gender": "female",
+                    "company": "Tuskys Rongai",
+                    "email": "maikline@rameon.com",
+                    "phone": "+1 (821) 525-2778",
+                    "address": "Muindi Mbingu Street (Kigali Street), Nairobi, Nairobi",
+                    "about": "Turkey burgdoggen tri-tip sirloin pork belly chuck hamburger swine shoulder jerky pancetta kielbasa. Short loin leberkas rump, ball tip bacon meatloaf pork belly pig sausage kevin turducken drumstick ham bresaola shoulder.\r\n",
                     "registered": "2015-02-04T12:23:04 -03:00",
                     "latitude": -40.303177,
                     "longitude": -131.742657
@@ -113,11 +155,11 @@ const Store = {
                     "photo": "paleo9",
                     "owner": "Kitty Hogan",
                     "gender": "female",
-                    "company": "Kindaloo Wazzu",
+                    "company": "Tuskys Chap! Chap!",
                     "email": "kittyhogan@wazzu.com",
                     "phone": "+1 (878) 445-3735",
                     "address": "942 Garden Street, Hartsville/Hartley, Nebraska, 143",
-                    "about": "Irure exercitation id ut qui mollit consectetur cupidatat laboris aliqua consequat cupidatat. In officia labore esse ex velit adipisicing. Tempor ex ullamco nostrud voluptate proident minim incididunt veniam et reprehenderit sint. Esse elit magna duis veniam laboris incididunt sunt et laboris tempor est officia. Cillum culpa minim excepteur Lorem do. Eiusmod nisi exercitation sint ex cillum eiusmod exercitation cillum officia laboris anim sit consectetur est. Mollit enim et commodo nisi.\r\n",
+                    "about": "Turkey burgdoggen tri-tip sirloin pork belly chuck hamburger swine shoulder jerky pancetta kielbasa. Short loin leberkas rump, ball tip bacon meatloaf pork belly pig sausage kevin turducken drumstick ham bresaola shoulder.\r\n",
                     "registered": "2016-01-13T07:38:22 -03:00",
                     "latitude": -81.090181,
                     "longitude": -157.239312
@@ -129,10 +171,10 @@ const Store = {
                     "photo": "paleo9",
                     "owner": "Harding Dillard",
                     "gender": "male",
-                    "company": "Interodeo Franscene",
+                    "company": "Intendo Franchise",
                     "email": "hardingdillard@franscene.com",
                     "phone": "+1 (997) 492-2082",
-                    "address": "271 Devoe Street, Harmon, Oklahoma, 3496",
+                    "address": "271 Devoe Street, Nairobi, Kenya",
                     "about": "Quis duis nostrud sunt aliquip sit consequat. Qui nulla elit do eiusmod laboris. Occaecat consectetur aute fugiat voluptate adipisicing exercitation veniam cupidatat nisi et officia. Pariatur reprehenderit labore proident anim. Deserunt cillum deserunt mollit quis.\r\n",
                     "registered": "2017-12-11T08:56:27 -03:00",
                     "latitude": -61.065271,
@@ -145,11 +187,11 @@ const Store = {
                     "photo": "paleo8",
                     "owner": "Tina Morin",
                     "gender": "female",
-                    "company": "Orbiflex Buzzworks",
+                    "company": "Orbi Buzzworks",
                     "email": "tinamorin@buzzworks.com",
                     "phone": "+1 (958) 449-2389",
-                    "address": "228 Madeline Court, Wacissa, North Carolina, 2692",
-                    "about": "Dolor nulla ad duis esse dolore consequat proident mollit commodo in duis laborum sint anim. Et quis commodo commodo et culpa esse tempor veniam incididunt voluptate laborum sit sunt. Aliquip sunt dolor ex eu consequat deserunt ex fugiat dolore ut aliquip. Cupidatat labore esse dolore nulla labore ut anim ad consectetur mollit sunt aliquip aute adipisicing. Do fugiat Lorem ullamco nisi cillum non elit commodo nulla occaecat magna aute enim labore. Nostrud amet ea deserunt esse amet. Minim ullamco exercitation ex cillum aliqua sint eiusmod fugiat exercitation labore.\r\n",
+                    "address": "Moi Avenue (Haile Selassie Avenue), Nairobi, Nairobi",
+                    "about": "Chicken cow leberkas doner. Venison sirloin sausage spare ribs. Short ribs pastrami boudin filet mignon pancetta, turkey beef ribs swine alcatra prosciutto meatball ham. Pancetta prosciutto cow andouille, buffalo pork chop pig ribeye landjaeger jowl. Doner shoulder pork, turducken buffalo pork chop filet mignon rump pork loin alcatra chicken.\r\n",
                     "registered": "2017-10-21T11:19:54 -03:00",
                     "latitude": -59.448592,
                     "longitude": -141.031375
@@ -161,11 +203,11 @@ const Store = {
                     "photo": "paleo5",
                     "owner": "Hammond Wyatt",
                     "gender": "male",
-                    "company": "Zanity Insurity",
+                    "company": "Langata Hyper",
                     "email": "hammondwyatt@insurity.com",
                     "phone": "+1 (918) 505-3956",
-                    "address": "666 Howard Place, Grimsley, Michigan, 2026",
-                    "about": "Sint nisi adipisicing sit deserunt. Anim do enim nulla nostrud nisi occaecat ullamco nisi deserunt amet in voluptate fugiat irure. Excepteur excepteur fugiat duis excepteur esse aute voluptate elit sunt esse. Sunt proident elit ut cupidatat ipsum incididunt. Laborum proident minim esse deserunt fugiat sunt aute et. Veniam sunt aute et officia cillum magna nostrud laboris ex veniam duis ullamco officia fugiat. Veniam sint officia consectetur velit quis exercitation et cupidatat.\r\n",
+                    "address": "666 Langata Road, Nairobi, Nairobi",
+                    "about": "Pork loin rump picanha strip steak tri-tip shank alcatra spare ribs kielbasa tenderloin meatloaf fatback pancetta tongue. Ground round meatloaf sausage doner. Ham strip steak sirloin filet mignon kielbasa, ground round cupim hamburger cow chuck spare ribs meatloaf short ribs. Turducken shank flank meatloaf turkey, tri-tip tail hamburger pork.\r\n",
                     "registered": "2014-06-11T12:28:58 -03:00",
                     "latitude": 42.408019,
                     "longitude": 72.934818
@@ -177,11 +219,11 @@ const Store = {
                     "photo": "paleo1",
                     "owner": "Vang Barrett",
                     "gender": "male",
-                    "company": "Cemention Maroptic",
+                    "company": "Capital Center",
                     "email": "vangbarrett@maroptic.com",
                     "phone": "+1 (925) 510-2496",
-                    "address": "306 Clarendon Road, Tibbie, Colorado, 8795",
-                    "about": "Eiusmod quis et dolor Lorem tempor ad. Non laborum magna laborum minim tempor irure. Officia cillum dolor elit dolor. Deserunt duis ea ad laborum aliqua sit non aute voluptate. Ullamco reprehenderit minim non ad velit. Elit proident est et ipsum.\r\n",
+                    "address": "306 Mombasa Road, Nairobi, Nairobi",
+                    "about": "Beef ribs alcatra cupim pig, brisket frankfurter rump fatback pastrami ribeye sausage landjaeger drumstick spare ribs sirloin. Bacon tail boudin swine filet mignon bresaola short loin beef ribs ground round pig andouille pork loin kielbasa cow.\r\n",
                     "registered": "2018-01-09T09:20:04 -03:00",
                     "latitude": -43.693525,
                     "longitude": 149.063676
@@ -193,11 +235,11 @@ const Store = {
                     "photo": "paleo1",
                     "owner": "Chris Mcclain",
                     "gender": "female",
-                    "company": "Comtour Emtrak",
+                    "company": "Ukay Stores",
                     "email": "chrismcclain@emtrak.com",
                     "phone": "+1 (801) 550-2966",
-                    "address": "327 Dekalb Avenue, Watrous, Wisconsin, 8432",
-                    "about": "Exercitation ex proident deserunt fugiat fugiat ipsum est. Fugiat est sit ad voluptate exercitation. Ad laborum sit culpa laborum esse occaecat commodo nulla laboris deserunt mollit nulla nisi mollit. Ex velit est enim qui qui quis velit velit cupidatat reprehenderit ipsum do labore cillum. Culpa reprehenderit cillum qui qui sint cillum culpa. Velit cupidatat magna adipisicing adipisicing irure ex ut in voluptate. Et officia dolor eu ut cupidatat ut aliqua aliquip dolor sit ad commodo id qui.\r\n",
+                    "address": "327 Mwanzi Road (Ring Road), Nairobi, Nairobi",
+                    "about": " Beef pastrami tail bacon porchetta short ribs flank, tenderloin pork loin ball tip jerky biltong doner turducken spare ribs. Strip steak ground round tail short loin ham hock. Ex velit est enim qui qui quis velit velit cupidatat reprehenderit ipsum do labore cillum. Culpa reprehenderit cillum qui qui sint cillum culpa. Velit cupidatat magna adipisicing adipisicing irure ex ut in voluptate. Et officia dolor eu ut cupidatat ut aliqua aliquip dolor sit ad commodo id qui.\r\n",
                     "registered": "2017-12-28T06:18:49 -03:00",
                     "latitude": 20.123379,
                     "longitude": -157.572169
@@ -209,10 +251,10 @@ const Store = {
                     "photo": "paleo8",
                     "owner": "Dillon Ross",
                     "gender": "male",
-                    "company": "Comvoy Zoid",
+                    "company": "Comvoy Groceries",
                     "email": "dillonross@zoid.com",
                     "phone": "+1 (896) 512-2545",
-                    "address": "332 Lincoln Terrace, Catherine, North Dakota, 5250",
+                    "address": "332 Lincoln Terrace, Catherine, Kenya",
                     "about": "Lorem nostrud nostrud non ad nisi sunt officia amet eu dolore. Esse eu adipisicing nostrud amet elit ex. Sunt voluptate incididunt excepteur magna irure anim veniam cillum aliquip aliqua. Incididunt excepteur laboris Lorem tempor. Commodo labore deserunt sunt eu officia ullamco sit voluptate aliqua id fugiat nisi eiusmod. Laborum officia labore aliquip enim et incididunt sunt.\r\n",
                     "registered": "2017-10-20T04:56:53 -03:00",
                     "latitude": -21.176033,
@@ -228,7 +270,7 @@ const Store = {
                     "company": "Geostele Earthpure",
                     "email": "harriettcase@earthpure.com",
                     "phone": "+1 (812) 536-3199",
-                    "address": "908 Lake Street, Haring, Illinois, 1402",
+                    "address": "908 Lake Street, Hurlinghum, Nairobi",
                     "about": "Excepteur ad elit fugiat eiusmod aliqua commodo proident ut qui excepteur. Officia est nostrud consequat nostrud nulla occaecat qui adipisicing. Esse incididunt nulla labore minim amet. Ullamco do nisi id in est. Consectetur reprehenderit Lorem irure eu fugiat nisi officia proident.\r\n",
                     "registered": "2014-08-25T02:48:43 -03:00",
                     "latitude": -40.768421,
@@ -241,10 +283,10 @@ const Store = {
                     "photo": "paleo8",
                     "owner": "Sawyer Compton",
                     "gender": "male",
-                    "company": "Kyagoro Marketoid",
+                    "company": "Adams Marketoid",
                     "email": "sawyercompton@marketoid.com",
                     "phone": "+1 (876) 410-3810",
-                    "address": "193 Loring Avenue, Adamstown, Connecticut, 845",
+                    "address": "193 Loring Avenue, Adamstown, Adams",
                     "about": "Enim anim sint eu aliquip mollit et cillum esse sint voluptate Lorem ea. Qui culpa deserunt laboris ipsum elit culpa qui id labore elit deserunt. Duis culpa cupidatat veniam Lorem. Cupidatat ut proident id quis ex voluptate tempor adipisicing ad.\r\n",
                     "registered": "2014-01-23T11:49:38 -03:00",
                     "latitude": -2.496955,
@@ -257,10 +299,10 @@ const Store = {
                     "photo": "paleo9",
                     "owner": "Pittman Rich",
                     "gender": "male",
-                    "company": "Octocore Pearlesex",
+                    "company": "Pearle Stores",
                     "email": "pittmanrich@pearlesex.com",
                     "phone": "+1 (868) 473-2253",
-                    "address": "279 Hooper Street, Delwood, Louisiana, 9393",
+                    "address": "279 Hooper Street, Delwood, Kilimani",
                     "about": "Officia consequat nostrud ex quis reprehenderit eiusmod magna ex Lorem. Ipsum incididunt ex do laboris pariatur mollit enim dolor dolor culpa nulla consectetur ut id. Enim occaecat tempor consequat exercitation.\r\n",
                     "registered": "2017-11-16T10:21:23 -03:00",
                     "latitude": -23.611105,
@@ -273,11 +315,11 @@ const Store = {
                     "photo": "paleo5",
                     "owner": "Ray Turner",
                     "gender": "male",
-                    "company": "Digial Yogasm",
+                    "company": "Digial Groceries",
                     "email": "rayturner@yogasm.com",
                     "phone": "+1 (894) 485-2057",
-                    "address": "705 Bancroft Place, Winesburg, New York, 7216",
-                    "about": "Culpa cupidatat est magna esse consequat. Aliqua nostrud occaecat id officia labore proident Lorem esse incididunt. Tempor duis in aliqua et adipisicing laborum occaecat Lorem consectetur elit sunt. Tempor occaecat proident proident culpa eu minim dolor adipisicing sint veniam aute aute. Labore aute excepteur non veniam. Enim incididunt Lorem mollit et aliquip tempor. Elit quis non eiusmod excepteur dolor sunt ullamco.\r\n",
+                    "address": "705 Bancroft Place, Winesburg, Nairobi",
+                    "about": "Aliqua nostrud occaecat id officia labore proident Lorem esse incididunt. Tempor duis in aliqua et adipisicing laborum occaecat Lorem consectetur elit sunt. Tempor occaecat proident proident culpa eu minim dolor adipisicing sint veniam aute aute. Labore aute excepteur non veniam. Enim incididunt Lorem mollit et aliquip tempor. Elit quis non eiusmod excepteur dolor sunt ullamco.\r\n",
                     "registered": "2014-04-19T11:01:02 -03:00",
                     "latitude": -72.136852,
                     "longitude": 63.191035
@@ -289,10 +331,10 @@ const Store = {
                     "photo": "paleo4",
                     "owner": "Buchanan Reyes",
                     "gender": "male",
-                    "company": "Talendula Acusage",
+                    "company": "Talendula Store",
                     "email": "buchananreyes@acusage.com",
                     "phone": "+1 (999) 489-3539",
-                    "address": "394 Independence Avenue, Eggertsville, New Mexico, 1112",
+                    "address": "394 Independence Avenue, Egerton, Kenya",
                     "about": "Eiusmod eu amet incididunt exercitation ad nostrud velit Lorem Lorem cupidatat do deserunt ipsum est. In sunt labore veniam cupidatat ex tempor velit laboris minim quis nisi. Ea do nisi sunt anim laboris. In pariatur velit sunt quis minim mollit aute incididunt. Sit ea enim et labore consectetur esse laborum.\r\n",
                     "registered": "2015-09-30T11:56:19 -03:00",
                     "latitude": 2.662161,
@@ -301,7 +343,6 @@ const Store = {
             ],
             isLoading: false,
             listLoaded: false,
-            Groceries: Groceries,
         };
     },
     created() {
@@ -347,11 +388,13 @@ const Store = {
         fetchStores() {
             // Get stores from google api
         },
-        toggleDone(item) {
-            // Toggle done
-        },
-        changePage() {
-            console.log("Navigating");
+        shareApp() {
+            dialogs.confirm('Lets share this app!')
+                .then(share => {
+                    if (share) {
+                        SocialShare.shareUrl("https://www.gyg.org/getyourgroceries", "Lets get your groceries home", "How would you like to share this app?");
+                    }
+                })
         },
         goToDetail(item) {
             selectedStore = item;
@@ -361,8 +404,8 @@ const Store = {
     template: `
         <Page xmlns:lv="nativescript-ui-listview">
             <ActionBar title="Stores" automationText="ActionBar" class="stores-action-bar " color="white" backgroundColor="black">
-                <NavigationButton text="Go Back" android.systemIcon="ic_menu_back" @tap="$navigateTo(Groceries)"></NavigationButton>
-                <ActionItem ios.systemIcon="2" android.systemIcon="ic_menu_share" ios.position="right"></ActionItem>
+                <NavigationButton text="Go Back" android.systemIcon="ic_menu_back" @tap="$navigateBack()"></NavigationButton>
+                <ActionItem ios.systemIcon="2" android.systemIcon="ic_menu_share" ios.position="right" @tap="shareApp"></ActionItem>
             </ActionBar>
 
             <ListView class="list-group" for="item in storeList" @itemTap="onItemTap" style="height:auto">
@@ -401,39 +444,45 @@ const StoreDetail = {
     },
     methods: {
         confirmOrder() {
-            this.$navigateBack();
+            const that = this;
+            appLoader.show(appLoaderOptions);
             setTimeout(function () {
-                dialogs.alert('Congratulations! Your order has been received and is being processed. You will receive items within 12 hours.')
-                    .then(() => {
-                        console.log("Dialog closed")
-                    })
-            }, 500)
+                appLoader.hide();
+                that.$modal.close();
+                setTimeout(function () {
+                    dialogs.alert('Congratulations! Your order has been received and is being processed. You will receive items within 12 hours.')
+                        .then(() => {
+                            console.log("Dialog closed")
+                        })
+                }, 500)
+            }, 2000);
         }
     },
     template: `
         <Page xmlns:lv="nativescript-ui-listview">
-            <ActionBar title="Stores" automationText="ActionBar" class="stores-action-bar " color="white" backgroundColor="black">
-                <NavigationButton text="Go Back" android.systemIcon="ic_menu_back" @tap="$navigateBack()"></NavigationButton>
-                <ActionItem ios.systemIcon="2" android.systemIcon="ic_menu_share" ios.position="right"></ActionItem>
-            </ActionBar>
-            <FlexboxLayout flexDirection="row" class="store-detail-item">
-                <Image :src="selectedStore.photo ? '~/images/' + selectedStore.photo + '.jpg' : ''" class="thumb store-image" />
-                <StackLayout  class="store-details">
-                    <Label :text="selectedStore.company" class="store-detail store-heading" />
-                    <TextView editable="false" class="store-text">
-                        <FormattedString>
-                            <Span :text="selectedStore.address" class="store-detail store-address"  />
-                        </FormattedString>
-                    </TextView>
-                    <TextView editable="false" class="store-text">
-                        <FormattedString>
-                            <Span :text="selectedStore.about" class="store-detail store-about"  />
-                        </FormattedString>
-                    </TextView>
-                    <Button text="Buy From Store" @tap="confirmOrder" />
+            <ScrollView>
+                <StackLayout>
+                    <FlexboxLayout flexDirection="row" class="store-detail-item">
+                        <StackLayout  class="store-details" width="100%">
+                            <Label :text="selectedStore.company" class="store-detail store-heading" />
+                            <TextView editable="false" class="store-text">
+                                <FormattedString>
+                                    <Span :text="selectedStore.address" class="store-detail store-address"  />
+                                </FormattedString>
+                            </TextView>
+                            <Image :src="selectedStore.photo ? '~/images/' + selectedStore.photo + '.jpg' : ''" class="thumb store-image" width="100%"/>
+                            <TextView editable="false" class="store-text">
+                                <FormattedString>
+                                    <Span :text="selectedStore.about" class="store-detail store-about"  />
+                                </FormattedString>
+                            </TextView>
+                            <Button text="Buy From Store" @tap="confirmOrder" />
+                            <Button @tap="$modal.close" text="Close" width="100%"/>
 
+                        </StackLayout>
+                    </FlexboxLayout>                   
                 </StackLayout>
-            </FlexboxLayout>
+            </ScrollView>
     </Page>
   `
 };

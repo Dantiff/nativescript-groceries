@@ -1,5 +1,5 @@
-const config = require("../appConfig");
 const fetchModule = require("fetch");
+const config = require("~/appConfig");
 
 const baseUrl = config.apiUrl + "appdata/" + config.appKey + "/Groceries";
 
